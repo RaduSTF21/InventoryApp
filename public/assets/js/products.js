@@ -2,16 +2,18 @@ let currentPage = 1;
 
 async function loadProducts(searchTerm = null) {
     const tableBody = document.querySelector('#productsTable tbody');
-
+    const rows = document.getElementById('rowsPerPage');
     try {
         tableBody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
+        const limit = rows.value;
         const params = new URLSearchParams();
+        params.append('limit', limit);
         if (searchTerm) params.append('search', searchTerm);
         params.append('page', currentPage);
 
         const response = await fetch(`api/products.php?${params.toString()}`);
         const data = await response.json();
-        
+
 
         tableBody.replaceChildren();
         if (data.data.length === 0) {
@@ -22,24 +24,29 @@ async function loadProducts(searchTerm = null) {
             row.appendChild(cell);
             tableBody.appendChild(row);
         }
-        data.data.forEach(product =>{
+        data.data.forEach(product => {
             const row = document.createElement('tr');
             const idCell = document.createElement('td');
             idCell.textContent = product.id;
+            idCell.dataset.label = 'ID';
             row.appendChild(idCell);
             const nameCell = document.createElement('td');
+            nameCell.dataset.label = 'Name';
             row.appendChild(nameCell);
             nameCell.textContent = product.name;
             const priceCell = document.createElement('td');
+            priceCell.dataset.label = 'Price';
             priceCell.textContent = product.price;
             row.appendChild(priceCell);
             const inStockCell = document.createElement('td');
-            const inStock = product.in_stock  == 1;
+            inStockCell.dataset.label = 'In Stock';
+            const inStock = product.in_stock == 1;
             inStockCell.textContent = inStock ? 'Yes' : 'No';
-            inStockCell.classList.add(inStock ? 'in-stock' : 'out-of-stock');            
+            inStockCell.classList.add(inStock ? 'in-stock' : 'out-of-stock');
             row.appendChild(inStockCell);
             const availableCell = document.createElement('td');
-            if(product.availability_date){
+            availableCell.dataset.label = 'Available Date';
+            if (product.availability_date) {
                 const date = new Date(product.availability_date);
                 availableCell.textContent = date.toLocaleDateString();
             } else {
@@ -47,7 +54,7 @@ async function loadProducts(searchTerm = null) {
             }
             row.appendChild(availableCell);
             const imageCell = document.createElement('td');
-            if(product.image_path){
+            if (product.image_path) {
                 const img = document.createElement('img');
                 img.src = `uploads/${product.image_path}`;
                 img.alt = product.name;
@@ -56,8 +63,10 @@ async function loadProducts(searchTerm = null) {
             } else {
                 imageCell.textContent = 'No Image';
             }
+            imageCell.dataset.label = 'Image';
             row.appendChild(imageCell);
             const descriptionCell = document.createElement('td');
+            descriptionCell.dataset.label = 'Description';
             descriptionCell.textContent = product.description;
             row.appendChild(descriptionCell);
             tableBody.appendChild(row);
@@ -89,9 +98,9 @@ async function loadProducts(searchTerm = null) {
                     }
                 }
 
-        });
-        actionsCell.appendChild(deleteButton);
-        row.appendChild(actionsCell);
+            });
+            actionsCell.appendChild(deleteButton);
+            row.appendChild(actionsCell);
         });
         renderPagination(data.total, data.limit, data.page);
 
@@ -123,26 +132,31 @@ searchInput.addEventListener('input', () => {
         loadProducts(searchTerm);
     }, 300);
 });
-
-function renderPagination(totalItems,itemsPerPage,currentPage){
+const rows = document.getElementById('rowsPerPage');
+rows.addEventListener('change', () => {
+    const searchTerm = searchInput.value.trim();
+    currentPage = 1;
+    loadProducts(searchTerm);
+});
+function renderPagination(totalItems, itemsPerPage, currentPage) {
     const paginationContainer = document.getElementById('paginationContainer');
-   const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
     paginationContainer.replaceChildren();
-    let startPage = Math.max(1,currentPage - 2);
+    let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, currentPage + 2);
-    if(startPage > 1){
+    if (startPage > 1) {
         createPageButton(1, paginationContainer);
-        if(startPage > 2){
+        if (startPage > 2) {
             const span = document.createElement('span');
             span.textContent = '...';
             paginationContainer.appendChild(span);
         }
     }
-    for(let i = startPage; i<= endPage; i++){
+    for (let i = startPage; i <= endPage; i++) {
         createPageButton(i, paginationContainer, i === currentPage);
     }
-    if(endPage < totalPages){
-        if(endPage < totalPages - 1){
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
             const span = document.createElement('span');
             span.textContent = '...';
             paginationContainer.appendChild(span);
@@ -151,10 +165,10 @@ function renderPagination(totalItems,itemsPerPage,currentPage){
     }
 }
 
-function createPageButton(page, container, isActive = false){
+function createPageButton(page, container, isActive = false) {
     const button = document.createElement('button');
     button.textContent = page;
-    if(isActive){
+    if (isActive) {
         button.classList.add('active');
     }
     button.addEventListener('click', () => {

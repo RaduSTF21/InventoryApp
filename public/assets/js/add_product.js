@@ -33,11 +33,11 @@ productForm.addEventListener('submit', async function (event) {
     if (result.success) {
         if (!productId) {
             alert(successMessage);
-            window.location.href = 'index.php';
+            productForm.reset();
         }
         else {
             alert(successMessage);
-            productForm.reset();
+            window.location.href = 'index.php';
         }
     }
     else {
