@@ -138,12 +138,22 @@ rows.addEventListener('change', () => {
     currentPage = 1;
     loadProducts(searchTerm);
 });
-function renderPagination(totalItems, itemsPerPage, currentPage) {
+function renderPagination(totalItems, itemsPerPage,onPage) {
     const paginationContainer = document.getElementById('paginationContainer');
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     paginationContainer.replaceChildren();
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    if (onPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.addEventListener('click', () => {
+            currentPage--;
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            loadProducts(searchTerm);
+        });
+        paginationContainer.appendChild(prevButton);
+    }
+    let startPage = Math.max(1, onPage - 2);
+    let endPage = Math.min(totalPages, onPage + 2);
     if (startPage > 1) {
         createPageButton(1, paginationContainer);
         if (startPage > 2) {
@@ -162,6 +172,16 @@ function renderPagination(totalItems, itemsPerPage, currentPage) {
             paginationContainer.appendChild(span);
         }
         createPageButton(totalPages, paginationContainer);
+    }
+    if (onPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.addEventListener('click', () => {
+            currentPage++;
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            loadProducts(searchTerm);
+        });
+        paginationContainer.appendChild(nextButton);
     }
 }
 

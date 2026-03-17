@@ -70,10 +70,25 @@ switch ($_SERVER['REQUEST_METHOD']){
                     echo json_encode(['success' => false, 'message' => 'Invalid price value']);
                     exit;
                     }
+                $name = trim($_POST['name'] ?? '');
+                if(empty($name)){
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'message' => 'Product name is required']);
+                    exit;
+                }
+                $date = $_POST['availability_date'] ?? null;
+                if($date){
+                    $d = DateTime::createFromFormat('Y-m-d', $date);
+                    if(!$d || $d->format('Y-m-d') !== $date){
+                        http_response_code(400);
+                        echo json_encode(['success' => false, 'message' => 'Invalid date format. Expected format: YYYY-MM-DD']);
+                        exit;
+                    }
+                }
                 $data = [
-                            'name' => $_POST['name'] ?? $existingProduct['name'] ?? '',
+                            'name' => $name,
                             'description' => $_POST['description'] ?? $existingProduct['description'] ?? '',
-                            'price' => ($price !== false) ? $price : ($existingProduct['price'] ?? 0),
+                            'price' => $price,
                             'in_stock' => isset($_POST['in_stock']) ? 1 : 0 ,
                             'availability_date' => $_POST['availability_date'] ?? $existingProduct['availability_date'] ?? '',
                             'image_path' => $imagePath ?? $existingProduct['image_path'] ?? ''
