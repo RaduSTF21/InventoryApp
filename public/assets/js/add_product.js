@@ -2,7 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
 let successMessage = 'Product added successfully!';
 let errorMessage = 'Error adding product. Please try again.';
-if(productId){
+if (productId) {
     successMessage = 'Product updated successfully!';
     errorMessage = 'Error updating product. Please try again.';
     document.querySelector('h2').textContent = 'Edit Product';
@@ -17,23 +17,30 @@ if(productId){
             document.querySelector('[name="availability_date"]').value = product.availability_date;
         })
         .catch(error => console.error('Error fetching product:', error));
-        
+
 
 }
 
 const productForm = document.getElementById('addProductForm');
-productForm.addEventListener('submit', async function(event){
+productForm.addEventListener('submit', async function (event) {
     event.preventDefault();
     const formData = new FormData(productForm);
     const response = await fetch('api/products.php', {
         method: 'POST',
         body: formData
     });
-    const result= await response.json();
-    if(result.success){
-        alert(successMessage);
-        productForm.reset();
-    } else {
+    const result = await response.json();
+    if (result.success) {
+        if (!productId) {
+            alert(successMessage);
+            window.location.href = 'index.php';
+        }
+        else {
+            alert(successMessage);
+            productForm.reset();
+        }
+    }
+    else {
         alert(errorMessage);
     }
 

@@ -65,7 +65,7 @@ async function loadProducts(searchTerm = null) {
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
             editButton.addEventListener('click', () => {
-                window.location.href = `edit_product.php?id=${product.id}`;
+                window.location.href = `add_product.php?id=${product.id}`;
             });
             actionsCell.appendChild(editButton);
             const deleteButton = document.createElement('button');
