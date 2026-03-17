@@ -12,6 +12,7 @@
     <div class="container">
         <h2>Add New Product</h2>
         <form id="addProductForm" class="product-form" enctype="multipart/form-data">
+            <input type="hidden" name="productId" name='id'>
             <div class ="form-group">
                 <label for="name">Product Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -30,10 +31,7 @@
             </div>
             <div class ="form-group">
                 <label for="in_stock">In Stock:</label>
-                <select id="in_stock" name="in_stock" >
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
+                <input type="checkbox" id="in_stock" name="in_stock">
             </div>
             <div class ="form-group">
                 <label for="image">Product Image:</label>

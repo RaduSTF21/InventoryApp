@@ -4,7 +4,7 @@ async function loadProducts(searchTerm = null) {
     const tableBody = document.querySelector('#productsTable tbody');
 
     try {
-        tableBody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
         const params = new URLSearchParams();
         if (searchTerm) params.append('search', searchTerm);
         params.append('page', currentPage);
@@ -17,7 +17,7 @@ async function loadProducts(searchTerm = null) {
         if (data.data.length === 0) {
             const row = document.createElement('tr');
             const cell = document.createElement('td');
-            cell.colSpan = 6;
+            cell.colSpan = 8;
             cell.textContent = 'No products found.';
             row.appendChild(cell);
             tableBody.appendChild(row);
@@ -61,17 +61,46 @@ async function loadProducts(searchTerm = null) {
             descriptionCell.textContent = product.description;
             row.appendChild(descriptionCell);
             tableBody.appendChild(row);
+            const actionsCell = document.createElement('td');
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.addEventListener('click', () => {
+                window.location.href = `edit_product.php?id=${product.id}`;
+            });
+            actionsCell.appendChild(editButton);
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', async () => {
+                if (confirm('Are you sure you want to delete this product?')) {
+                    try {
+                        const deleteResponse = await fetch(`api/products.php?id=${product.id}`, {
+                            method: 'DELETE'
+                        });
+                        const deleteResult = await deleteResponse.json();
+                        if (deleteResult.success) {
+                            alert('Product deleted successfully!');
+                            loadProducts(searchTerm);
+                        } else {
+                            alert('Error deleting product: ' + deleteResult.message);
+                        }
+                    } catch (error) {
+                        console.error('Error deleting product:', error);
+                        alert('An error occurred while deleting the product.');
+                    }
+                }
 
         });
+        actionsCell.appendChild(deleteButton);
+        row.appendChild(actionsCell);
+        });
         renderPagination(data.total, data.limit, data.page);
-
 
     } catch (error) {
         console.error('Error loading products:', error);
         tableBody.replaceChildren();
         const row = document.createElement('tr');
         const cell = document.createElement('td');
-        cell.colSpan = 6;
+        cell.colSpan = 8;
         cell.textContent = 'Error loading products';
         row.appendChild(cell);
         tableBody.appendChild(row);

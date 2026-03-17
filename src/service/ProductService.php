@@ -64,5 +64,50 @@ class ProductService{
             return false;
         }
     }
+    public function deleteProduct(int $id):bool{
+        try{
+            $sql ='DELETE FROM products WHERE id = :id';
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        catch(PDOException $e){
+            error_log('Database error: '.$e->getMessage());
+            return false;
+        }
+    }
+
+    public function getById(int $id):array{
+        try{
+            $sql = 'SELECT * FROM products WHERE id = :id';
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        }
+        catch(PDOException $e){
+            error_log('Database error: '.$e->getMessage());
+            return [];
+        }
+    }
+
+    public function updateProduct(int $id, array $data):bool{
+        try{
+            $sql = 'UPDATE products SET name = :name, description = :description, price = :price, in_stock = :in_stock, availability_date = :availability_date, image_path = :image_path WHERE id = :id';
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':name', $data['name']);
+            $stmt->bindValue(':description', $data['description']);
+            $stmt->bindValue(':price', $data['price'], PDO::PARAM_STR);
+            $stmt->bindValue(':in_stock', $data['in_stock'], PDO::PARAM_INT);
+            $stmt->bindValue(':availability_date', $data['availability_date']);
+            $stmt->bindValue(':image_path', $data['image_path']);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        catch(PDOException $e){
+            error_log('Database error: '.$e->getMessage());
+            return false;
+        }
+    }
 
 }
