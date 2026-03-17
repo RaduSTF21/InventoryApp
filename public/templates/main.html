@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src = "assets/js/Components/navbar.js" defer></script>
+</head>
+<body>
+    <app-navbar></app-navbar>
+            
+    <div class="table-controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search products by name...">
+        </div>
+    </div>
+    <div class="container">
+        <table id="productsTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Availability Date </th>
+                    <th>Image</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id='paginationContainer' class='pagination'>
+        
+    </div>
+
+    <script src="assets/js/products.js"></script>
+
+</body>
+</html>

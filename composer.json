@@ -1,0 +1,16 @@
+{
+    "name": "stefan/inventory-app",
+    "type": "prproject",
+    "autoload": {
+        "psr-4": {
+            "Stefan\\InventoryApp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "RaduSTF21",
+            "email": "lagg1756@gmail.com"
+        }
+    ],
+    "require": {}
+}

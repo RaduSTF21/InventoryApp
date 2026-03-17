@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src = "assets/js/Components/navbar.js" defer></script>
+</head>
+<body>
+    <app-navbar></app-navbar>
+    <div class="container">
+        <h2>Add New Product</h2>
+        <form id="addProductForm" class="product-form" enctype="multipart/form-data">
+            <div class ="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class ="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required>
+            </div>
+            <div class ="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4"></textarea>
+            </div>
+             <div class ="form-group">
+                <label for="availability_date">Availability Date:</label>
+                <input type="date" id="availability_date" name="availability_date">
+            </div>
+            <div class ="form-group">
+                <label for="in_stock">In Stock:</label>
+                <select id="in_stock" name="in_stock" >
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class ="form-group">
+                <label for="image">Product Image:</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            <button type="submit" class="btn-submit"> Save Product</button>
+        </form>
+    </div>
+    <script src="assets/js/add_product.js"></script>
+</body>
+</html>
